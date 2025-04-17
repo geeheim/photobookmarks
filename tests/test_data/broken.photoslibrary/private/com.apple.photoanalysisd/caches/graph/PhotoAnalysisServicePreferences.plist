@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>changeTokenByIncrementalKey</key>
+	<dict/>
+	<key>metadata</key>
+	<dict>
+		<key>upgradeDate</key>
+		<date>2025-04-15T20:28:11Z</date>
+		<key>version</key>
+		<integer>2</integer>
+	</dict>
+	<key>nonIncrementalRunRecords</key>
+	<dict/>
+	<key>records</key>
+	<dict>
+		<key>PHAAssetRevGeocodeEnrichmentTask</key>
+		<dict>
+			<key>completionDate</key>
+			<date>2025-04-17T22:57:26Z</date>
+			<key>didRunIncrementally</key>
+			<false/>
+			<key>fteInterval</key>
+			<real>175745</real>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<key>PHAFeaturesUsageReportingTask</key>
+		<dict>
+			<key>completionDate</key>
+			<date>2025-04-17T21:11:45Z</date>
+			<key>didRunIncrementally</key>
+			<false/>
+			<key>fteInterval</key>
+			<real>39</real>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<key>PHAMediaSampleReportingTask</key>
+		<dict>
+			<key>completionDate</key>
+			<date>2025-04-17T21:11:52Z</date>
+			<key>didRunIncrementally</key>
+			<false/>
+			<key>fteInterval</key>
+			<real>39</real>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+	</dict>
+</dict>
+</plist>

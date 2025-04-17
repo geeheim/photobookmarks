@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Library</key>
+	<dict>
+		<key>Identifier</key>
+		<dict>
+			<key>ContainerIdentifier</key>
+			<string>com.apple.photos</string>
+			<key>Name</key>
+			<string>broken</string>
+			<key>Path</key>
+			<string>/Users/geert/Developer/photobookmarks/tests/test_data/broken.photoslibrary</string>
+			<key>UUID</key>
+			<string>06A791F9-3040-49A2-B745-B0CBDA54F65E</string>
+			<key>UserDescription</key>
+			<string></string>
+		</dict>
+	</dict>
+	<key>PLModelMigrator.CreateOptions</key>
+	<dict>
+		<key>PLPhotoLibraryCreateOptions</key>
+		<integer>32</integer>
+	</dict>
+</dict>
+</plist>
