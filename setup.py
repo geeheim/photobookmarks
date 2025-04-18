@@ -8,7 +8,7 @@ setup(
     name="update_photo_bookmarks",
     version="0.1.0",
     author="Geert Heilmann",
-    author_email="geert.heilmann@me.com",
+    author_email="geert.heilmann@googlemail.com",
     description="A module for managing photo bookmarks in a mac OS photo librarydatabase",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -25,7 +25,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'update-photo-bookmarks=update_photo_bookmarks.update_photo_bookmarks:main',
+            'update-photo-bookmarks=update_photo_bookmarks:main',
         ],
     },
 )
