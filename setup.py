@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="update_photo_bookmarks",
-    version="0.1.0",
+    version="0.2.0",
     author="Geert Heilmann",
     author_email="geert.heilmann@googlemail.com",
     description="A module for managing photo bookmarks in a mac OS photo librarydatabase",
