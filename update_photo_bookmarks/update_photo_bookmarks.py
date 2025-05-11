@@ -7,6 +7,7 @@ import logging
 import sys
 from .photos_db import *
 import uuid
+
 logger=logging.getLogger(__name__)
 
 
@@ -33,6 +34,15 @@ def update_or_merge_volume_table(connection, original_volume, temp_volume) -> tu
             lut[old_entry['Z_PK']] = original_entry['Z_PK']
     return lut
 
+def confirm(question):
+    while True:
+        antwort = input(question + " (yes/no): ").strip().lower()
+        if antwort in ["yes", "y"]:
+            return True
+        elif antwort in ["no", "n"]:
+            return False
+        else:
+            print("Please answer with 'yes', 'y', 'no, or 'n'.")
             
 def update_bookmarks(cursor: sqlite3.Cursor, originals: List[PhotoInfo], update: PhotoInfo, volume_lut: dict) -> dict:
     """Update a bookmark in the photos db """
@@ -85,8 +95,10 @@ def main():
     # set log level
     if args.verbose:
         logger.setLevel(logging.DEBUG)
+        logging.getLogger("update_photo_bookmarks").setLevel(logging.DEBUG)
     else:
         logger.setLevel(logging.INFO)
+        logging.getLogger("update_photo_bookmarks").setLevel(logging.INFO)
     # check if library exists
     if not os.path.exists(photos_library):
         print(f"Error: {photos_library} does not exist")
@@ -118,7 +130,18 @@ def main():
 
     updated_bookmarks = 0
     for bm_update in bm_updates:
-        orig_photo_info = get_photo_info(cur, bm_update.date_created, bm_update.path_relative_to_volume)
+        if bm_update.path_relative_to_volume.endswith("MOV01610.MPG"):
+            breakpoint = 0
+        orig_photo_info = get_photo_info(cur, bm_update.file_size, bm_update.path_relative_to_volume)
+
+        #remove items with different dates 
+        for original_photo in orig_photo_info[:]:
+            if original_photo.date_created != bm_update.date_created:
+                logger.warning("date_created is different are for following entries")
+                logger.warning(f"{original_photo.path_relative_to_volume} date: {original_photo.date_created}  != {bm_update.path_relative_to_volume} date: {bm_update.date_created}")
+                if confirm("do you really want to update the bookmarks?") == False:
+                    orig_photo_info.remove(original_photo)
+
         if len(orig_photo_info) > 0:
             # photo exists in the database
             update_bookmarks(cur, orig_photo_info, bm_update, volume_lut)

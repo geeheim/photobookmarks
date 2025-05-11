@@ -10,7 +10,7 @@ logger=logging.getLogger(__name__)
 # namedtuple to hold the data from the ZFILESYSTEMBOOKMARK table
 PhotoInfo = namedtuple(
     "PhotoInfo",
-    ["fsbookmark_pk", "asset_pk", "volume_pk", "volume_name", "path_relative_to_volume", "bookmark_data", "asset_directory", "asset_filename", "date_created"],
+    ["fsbookmark_pk", "asset_pk", "volume_pk", "volume_name", "path_relative_to_volume", "bookmark_data", "asset_directory", "asset_filename", "date_created", "file_size"],
 )
 
 def open_photo_db(fname: str) -> tuple[sqlite3.Connection, sqlite3.Cursor]:
@@ -39,19 +39,21 @@ def get_all_referenced_photos(db_path: str) -> list[PhotoInfo]:
             ZFILESYSTEMBOOKMARK.ZBOOKMARKDATA,
             ZASSET.ZDIRECTORY,
             ZASSET.ZFILENAME,
-            ZASSET.ZDATECREATED
+            ZASSET.ZDATECREATED,
+            ZADDITIONALASSETATTRIBUTES.ZORIGINALFILESIZE
         FROM ZFILESYSTEMBOOKMARK
         JOIN ZINTERNALRESOURCE ON ZINTERNALRESOURCE.ZFILESYSTEMBOOKMARK = ZFILESYSTEMBOOKMARK.Z_PK
         JOIN ZFILESYSTEMVOLUME ON ZFILESYSTEMVOLUME.Z_PK = ZINTERNALRESOURCE.ZFILESYSTEMVOLUME
         JOIN ZASSET ON ZASSET.Z_PK = ZINTERNALRESOURCE.ZASSET
+        JOIN ZADDITIONALASSETATTRIBUTES ON ZADDITIONALASSETATTRIBUTES.ZASSET = ZASSET.Z_PK 
         WHERE ZASSET.ZSAVEDASSETTYPE = 10
     """)
-    results = [PhotoInfo(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]) for row in cur]
+    results = [PhotoInfo(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]) for row in cur]
     conn.close()
     return results
 
 
-def get_photo_info(cur: sqlite3.Cursor, ts_created, filename) -> List[PhotoInfo]:
+def get_photo_info(cur: sqlite3.Cursor, file_size, filename) -> List[PhotoInfo]:
     """Get photo info from database"""
     cur.execute("""
         SELECT ZFILESYSTEMBOOKMARK.Z_PK,
@@ -62,20 +64,21 @@ def get_photo_info(cur: sqlite3.Cursor, ts_created, filename) -> List[PhotoInfo]
             ZFILESYSTEMBOOKMARK.ZBOOKMARKDATA,
             ZASSET.ZDIRECTORY,
             ZASSET.ZFILENAME,
-            ZASSET.ZSAVEDASSETTYPE,
-            ZASSET.ZDATECREATED
+            ZASSET.ZDATECREATED,
+            ZADDITIONALASSETATTRIBUTES.ZORIGINALFILESIZE
         FROM ZASSET
         JOIN ZINTERNALRESOURCE ON ZINTERNALRESOURCE.ZFILESYSTEMBOOKMARK = ZFILESYSTEMBOOKMARK.Z_PK
         JOIN ZFILESYSTEMVOLUME ON ZFILESYSTEMVOLUME.Z_PK = ZINTERNALRESOURCE.ZFILESYSTEMVOLUME
         JOIN ZFILESYSTEMBOOKMARK ON ZASSET.Z_PK = ZINTERNALRESOURCE.ZASSET
-        WHERE ZASSET.ZDATECREATED = ?
-        """, (ts_created,))
+        JOIN ZADDITIONALASSETATTRIBUTES ON ZADDITIONALASSETATTRIBUTES.ZASSET = ZASSET.Z_PK 
+        WHERE ZADDITIONALASSETATTRIBUTES.ZORIGINALFILESIZE = ? AND ZASSET.ZSAVEDASSETTYPE = 10
+        """, (file_size,))
     rows = cur.fetchall()
-    logger.debug("got %d rows for ts_created=%s", len(rows), ts_created)
+    logger.debug("got %d rows for file_size=%s", len(rows), file_size)
     entries = []
     for row in rows:
         if os.path.basename(row[4]) == os.path.basename(filename):
-            entries.append(PhotoInfo(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]))
+            entries.append(PhotoInfo(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]))
     return entries
 
 def read_zfilesystemvolume_data(photos_db_path: str) -> Dict[int, sqlite3.Row]:
