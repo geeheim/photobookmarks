@@ -1,0 +1,1 @@
+from .update_photo_bookmarks import main
