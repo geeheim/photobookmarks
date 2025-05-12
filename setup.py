@@ -6,13 +6,13 @@ with open("README.md", "r") as fh:
 
 setup(
     name="update_photo_bookmarks",
-    version="0.2.0",
+    version="0.2.1",
     author="Geert Heilmann",
     author_email="geert.heilmann@googlemail.com",
     description="A module for managing photo bookmarks in a mac OS photo librarydatabase",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/geeheim/update_photo_bookmarks",
+    url="https://github.com/geeheim/photobookmarks",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
